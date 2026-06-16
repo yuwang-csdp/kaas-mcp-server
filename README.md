@@ -113,6 +113,42 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
+### Using MCP tools from AI coding clients
+
+Any MCP-compatible AI client can call `search_knowledge`, `submit_feedback`, and `get_health` directly. The MCP server must be running (or launched on-demand by the client) with the REST API already up.
+
+The config block is the same across clients — only the config file location differs:
+
+| Client | Config file |
+|--------|-------------|
+| Claude Desktop | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) |
+| Claude Code (CLI) | `~/.claude/claude_desktop_config.json`, or run: `claude mcp add kaas -- python -m kaas.mcp.server` |
+| Cursor | `.cursor/mcp.json` in the project root, or `~/.cursor/mcp.json` globally |
+| GitHub Copilot (VS Code) | `.vscode/mcp.json` in the project root |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+
+All clients use the same JSON shape:
+
+```json
+{
+  "mcpServers": {
+    "kaas": {
+      "command": "python",
+      "args": ["-m", "kaas.mcp.server"],
+      "env": {
+        "KAAS_BASE_URL": "http://localhost:8000",
+        "KAAS_MCP_API_KEY": "your-key"
+      }
+    }
+  }
+}
+```
+
+Once configured, you can invoke the tools conversationally — for example, ask your AI assistant:
+> *"Call search_knowledge with query 'how do I set up email settings' and agent_id 'test-agent'"*
+
+The client will call the MCP tool and return the response inline.
+
 ---
 
 ## API Reference
